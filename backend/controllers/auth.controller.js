@@ -19,8 +19,8 @@ export const signup = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const boyProfilePic = `https://i.pravatar.cc/150?username=${username}`;
-    const girlProfilePic = `https://i.pravatar.cc/150?username=${username}&gender=female`;
+    const boyProfilePic = `https://api.dicebear.com/9.x/pixel-art/svg?seed=${username}`;
+    const girlProfilePic = `https://api.dicebear.com/9.x/pixel-art/svg?seed=${username}`;
 
     const newUser = new User({
       fullName,
@@ -41,7 +41,7 @@ export const signup = async (req, res) => {
         profilePic: newUser.profilePic,
       });
     } else {
-      res.status(400).json({ error: " invalid user data"});
+      res.status(400).json({ error: " invalid user data" });
     }
   } catch (err) {
     console.log("Error in signup controller", err.message);
@@ -56,7 +56,7 @@ export const login = async (req, res) => {
     const user = await User.findOne({ username });
     const isPasswordCorrect = await bcrypt.compare(
       password,
-      user?.password || ""
+      user?.password || "",
     );
 
     if (!user || !isPasswordCorrect) {
@@ -78,12 +78,11 @@ export const login = async (req, res) => {
 };
 
 export const logout = (req, res) => {
-  try{
-      res.cookie("jwt", "", {maxAge:0}) ;
-      res.status(200).json({message: " logged out successfully."})
-  }
-  catch(error){
-     console.log("error in logout controller", error.message);
+  try {
+    res.cookie("jwt", "", { maxAge: 0 });
+    res.status(200).json({ message: " logged out successfully." });
+  } catch (error) {
+    console.log("error in logout controller", error.message);
     res.status(500).json({ error: "internal server error" });
   }
 };
